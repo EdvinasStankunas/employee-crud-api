@@ -1,0 +1,5 @@
+Flask>=2.0
+mysql-connector-python>=8.0
+Faker>=10.0 # For generating random data
+python-dotenv>=0.19 # To load .env file
+requests # Useful for potentially waiting for DB

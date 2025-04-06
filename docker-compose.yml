@@ -1,0 +1,64 @@
+services:
+  db:
+    image: mysql:8.0 # Use an official MySQL image version
+    container_name: mysql_db
+    command: --default-authentication-plugin=mysql_native_password # For compatibility if needed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Use from .env
+      MYSQL_DATABASE: ${MYSQL_DATABASE}           # Use from .env
+      MYSQL_USER: ${MYSQL_USER}                   # Use from .env
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}           # Use from .env
+    ports:
+      # Expose port 3306 only if you need direct access from your host machine
+      # For container-to-container communication, this isn't strictly needed.
+      - "3306:3306"
+    volumes:
+      # Persistent storage for database data
+      - mysql_data:/var/lib/mysql
+      # Optional: Mount init scripts (e.g., to create read-only user)
+      # These scripts run when the container first starts with an empty data volume
+      - ./mysql_init:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck: # Basic healthcheck for MySQL
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+
+  api:
+    build: ./api # Path to the Dockerfile directory
+    container_name: flask_api
+    ports:
+      - "5000:5000" # Map host port 5000 to container port 5000
+    depends_on:
+      db: # Wait for db container to start (doesn't guarantee readiness)
+        condition: service_healthy # Wait for the DB healthcheck to pass
+    environment:
+      # Pass database connection details and other config to the API container
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      DB_HOST: db # Use the service name 'db' to connect
+      DB_PORT: ${DB_PORT}
+      API_KEY: ${API_KEY} # Pass the API key
+      FLASK_DEBUG: ${FLASK_DEBUG:-0} # Default to 0 if not set in .env
+      PYTHONUNBUFFERED: 1 # Ensure logs appear immediately
+    volumes:
+       # Mount local code for development (optional, remove for production image)
+       # - ./api:/app
+       # If you use the volume mount above, changes in ./api reflect immediately
+       # without rebuilding, but dependencies changes still require rebuild.
+       # For production, rely on the image built by `docker-compose build`.
+        - /app/venv # Example: Exclude virtualenv if it's inside ./api
+    networks:
+      - app-network
+    env_file:
+      - .env # Load environment variables from .env file
+
+volumes:
+  mysql_data: # Define the named volume for persistence
+
+networks:
+  app-network: # Define the network for services to communicate
+    driver: bridge
