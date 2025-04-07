@@ -19,22 +19,17 @@ Before you begin, ensure you have the following installed on your system:
 
 * [Docker Engine](https://docs.docker.com/engine/install/)
 * [Docker Compose](https://docs.docker.com/compose/install/) (Included with Docker Desktop)
-* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) (for cloning the repository)
 
 ## Setup and Running
 
 1.  **Clone the Repository:**
     ```bash
-    git clone <your-repository-url>
+    git clone https://github.com/EdvinasStankunas/employee-crud-api.git
     cd employee-crud-api
     ```
 
 2.  **Configure Environment Variables:**
-    * Copy the example environment file:
-        ```bash
-        cp .env.example .env
-        ```
-    * **IMPORTANT:** Open the `.env` file and edit the following variables:
+        * Open the `.env` file and edit the following variables:
         * `MYSQL_ROOT_PASSWORD`: Set a strong password for the MySQL root user.
         * `MYSQL_PASSWORD`: Set a strong password for the application's MySQL user (`app_user`).
         * `API_KEY`: **Generate a secure, random API key.**
@@ -66,8 +61,8 @@ The API service should now be running and accessible at `http://localhost:5000`.
 
 **Authentication:**
 Most endpoints require an API key for authorization. You must include the following header in your requests:
-`X-API-KEY: <your_api_key_value>`
-(Replace `<your_api_key_value>` with the key you set in the `.env` file).
+`X-API-KEY: your_super_secret_api_key`
+(Replace `your_super_secret_api_key` with the key you set in the `.env` file).
 
 ---
 
@@ -92,7 +87,7 @@ Most endpoints require an API key for authorization. You must include the follow
 
 * **Endpoint:** `POST /employees`
 * **Description:** Adds a new employee record.
-* **Headers:** `X-API-KEY: <your_api_key_value>`, `Content-Type: application/json`
+* **Headers:** `X-API-KEY: your_super_secret_api_key`, `Content-Type: application/json`
 * **Request Body (JSON):**
     ```json
     {
@@ -115,7 +110,7 @@ Most endpoints require an API key for authorization. You must include the follow
 * **Example:**
     ```bash
     curl -X POST -H "Content-Type: application/json" \
-    -H "X-API-KEY: <your_api_key_value>" \
+    -H "X-API-KEY: your_super_secret_api_key" \
     -d '{"name": "Jane Smith", "department": "Marketing"}' \
     http://localhost:5000/employees
     ```
@@ -126,7 +121,7 @@ Most endpoints require an API key for authorization. You must include the follow
 
 * **Endpoint:** `GET /employees`
 * **Description:** Retrieves a list of all employee records.
-* **Headers:** `X-API-KEY: <your_api_key_value>`
+* **Headers:** `X-API-KEY: your_super_secret_api_key`
 * **Success Response (200 OK):** Returns a JSON array of employee objects.
     ```json
     [
@@ -140,7 +135,6 @@ Most endpoints require an API key for authorization. You must include the follow
         "name": "...",
         "department": "..."
       }
-      // ... potentially up to 500+ employees
     ]
     ```
 * **Error Responses:**
@@ -148,7 +142,7 @@ Most endpoints require an API key for authorization. You must include the follow
     * `500 Internal Server Error`: Database error during retrieval.
 * **Example:**
     ```bash
-    curl -H "X-API-KEY: <your_api_key_value>" http://localhost:5000/employees
+    curl -H "X-API-KEY: your_super_secret_api_key" http://localhost:5000/employees
     ```
 
 ---
@@ -157,7 +151,7 @@ Most endpoints require an API key for authorization. You must include the follow
 
 * **Endpoint:** `GET /employees/{id}`
 * **Description:** Retrieves a single employee record by its ID.
-* **Headers:** `X-API-KEY: <your_api_key_value>`
+* **Headers:** `X-API-KEY: your_super_secret_api_key`
 * **Path Parameter:** `id` (integer) - The ID of the employee to retrieve.
 * **Success Response (200 OK):** Returns the employee object.
     ```json
@@ -173,7 +167,7 @@ Most endpoints require an API key for authorization. You must include the follow
     * `500 Internal Server Error`: Database error during retrieval.
 * **Example:**
     ```bash
-    curl -H "X-API-KEY: <your_api_key_value>" http://localhost:5000/employees/10
+    curl -H "X-API-KEY: your_super_secret_api_key" http://localhost:5000/employees/10
     ```
 
 ---
@@ -182,7 +176,7 @@ Most endpoints require an API key for authorization. You must include the follow
 
 * **Endpoint:** `PUT /employees/{id}`
 * **Description:** Updates an existing employee's details. You can update `name`, `department`, or both.
-* **Headers:** `X-API-KEY: <your_api_key_value>`, `Content-Type: application/json`
+* **Headers:** `X-API-KEY: your_super_secret_api_key`, `Content-Type: application/json`
 * **Path Parameter:** `id` (integer) - The ID of the employee to update.
 * **Request Body (JSON):** Include the fields you want to update.
     ```json
@@ -207,7 +201,7 @@ Most endpoints require an API key for authorization. You must include the follow
 * **Example:**
     ```bash
     curl -X PUT -H "Content-Type: application/json" \
-    -H "X-API-KEY: <your_api_key_value>" \
+    -H "X-API-KEY: your_super_secret_api_key" \
     -d '{"department": "Product Management"}' \
     http://localhost:5000/employees/10
     ```
@@ -218,7 +212,7 @@ Most endpoints require an API key for authorization. You must include the follow
 
 * **Endpoint:** `DELETE /employees/{id}`
 * **Description:** Deletes an employee record by its ID.
-* **Headers:** `X-API-KEY: <your_api_key_value>`
+* **Headers:** `X-API-KEY: your_super_secret_api_key`
 * **Path Parameter:** `id` (integer) - The ID of the employee to delete.
 * **Success Response (200 OK):**
     ```json
@@ -232,7 +226,7 @@ Most endpoints require an API key for authorization. You must include the follow
     * `500 Internal Server Error`: Database error during deletion.
 * **Example:**
     ```bash
-    curl -X DELETE -H "X-API-KEY: <your_api_key_value>" http://localhost:5000/employees/10
+    curl -X DELETE -H "X-API-KEY: your_super_secret_api_key" http://localhost:5000/employees/10
     ```
 
 ---
